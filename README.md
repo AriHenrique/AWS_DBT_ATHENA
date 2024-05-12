@@ -1,4 +1,20 @@
-### README para o Projeto Terraform do DBT
+### Projeto Terraform do DBT Athena
+
+<img src="arquitetura_dbt.svg">
+
+1) Horário definido no cronograma do EventBridge para iniciar o processo
+1) EventBridge Aciona a Lambda no horário agendado
+1) Lambda inicia o CodeBuild
+1) Caso haja erro na inicialização do CodeBuild uma mensagem de erro é enviada para os responsáveis
+1) Time de Engenharia/Análise responsáveis pelo desenvolvimento do Data Warehouse
+1) O GitHub fornece o repositório para ser clonado pelo CodeBuild no momento da construção da imagem
+1) O Secrets Manager fornece as credenciais IAM para ser usada no DBT no momento da execução do CodeBuild
+1) As permissões de manipulação e transformação de banco de dados e tabelas são fornecidas ao Usuário IAM
+1) Os dados a serem modelados são consultados da "Stage/Silver" pelo conector do Athena usado pela DBT
+1) Através da configuração da imagem feita no arquivo buildspec.yml, o CodeBuild instala as dependências e inicia o DBT
+1) Caso haja erros durante o processo ou algum dos testes feito pelo DBT resulte em erro, uma notificação é disparada aos responsáveis
+1) O DBT roda o projeto clonado do GitHub e recria as tabelas de cada banco de dados, aplicando a estrutura feita pelos desenvolvedores
+1) A camada "Analytics" então é abastecido pelo DBT e disponibilizado para os demais bancos de dados
 
 #### Descrição
 
