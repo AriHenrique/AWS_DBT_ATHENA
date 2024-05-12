@@ -2,8 +2,6 @@ venv
 target/
 dbt_packages/
 logs/
-dev
+dev/
 .idea
-.gitignore
 arquitetura_dbt.drawio
-.$arquitetura_dbt.drawio.dtmp
