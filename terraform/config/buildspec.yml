@@ -1,0 +1,32 @@
+version: 0.2
+env:
+  secrets-manager:
+    access_id: $secret_manager:access_id
+    access_key: $secret_manager:access_key
+phases:
+  pre_build:
+    commands:
+      - pip install dbt-athena-community
+      - aws configure set aws_access_key_id $access_id
+      - aws configure set aws_secret_access_key $access_key
+      - aws configure set default.region $AWS_DEFAULT_REGION
+  build:
+    commands:
+      - aws s3 ls
+      - dbt deps
+      - dbt seed
+      - dbt snapshot
+      - dbt run --profiles-dir .
+      - dbt test
+      - dbt docs generate
+  post_build:
+    commands:
+      - aws s3 cp target/catalog.json s3://$s3_public/
+      - aws s3 cp target/graph.gpickle s3://$s3_public/
+      - aws s3 cp target/graph_summary.json s3://$s3_public/
+      - aws s3 cp target/index.html s3://$s3_public/
+      - aws s3 cp target/manifest.json s3://$s3_public/
+      - aws s3 cp target/partial_parse.msgpack s3://$s3_public/
+      - aws s3 cp target/run_results.json s3://$s3_public/
+      - aws s3 cp target/semantic_manifest.json s3://$s3_public/
+      - aws s3 cp error.html s3://$s3_public/

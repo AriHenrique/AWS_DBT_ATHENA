@@ -2,5 +2,6 @@ venv
 target/
 dbt_packages/
 logs/
-terraform
+dev
 .idea
+.gitignore
